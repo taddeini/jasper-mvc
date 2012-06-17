@@ -1,8 +1,8 @@
-﻿(function (global) {
+﻿(function (global, $) {
   var JasperMvc = global.JasperMvc = {};
 
   JasperMvc.VERSION = "0.0.1";
- 
+
   var Settings = JasperMvc.Settings = (function () {
     return {
       $app: $("<div></div>").appendTo("body"),
@@ -16,7 +16,7 @@
     var _routes = {};
   
     var _matchRoute = function (routeName) {
-      // Remove any whitespace and trailing "/"s
+      // Remove any whitespace and trailing "/"
       routeName = routeName.trim().replace(/\/$/, "");;
       var route = _routes[routeName],
           routeNameParts;
@@ -63,15 +63,15 @@
         return _controllers[name];
       },
 
-      executeAction: function (actionEntry) {
+      executeAction: function (actionEntry, model, id) {
         var controller = Controller.get(actionEntry.controller);
-        return controller[actionEntry.action].apply(this, arguments);
+        return controller[actionEntry.action].apply(this, [model, id]);
       },
 
-      executeRoute: function (routeName) {
+      executeRoute: function (routeName, model, id) {
         var actionEntry = Routes.get(routeName);
         if (typeof actionEntry !== "undefined") {
-         return this.executeAction(actionEntry);
+          return this.executeAction(actionEntry, model, id);
         }
       }
     };
@@ -82,11 +82,6 @@
 
     return {
       render: function (template, model) {
-        /*
-        - Handle use of 2 dependencies here, vash and jQuery
-        - Handle parsing of 'path' template and also parsing of 'selector'
-        */
-
         var content;
 
         if (!_templates[template]) {
@@ -103,28 +98,59 @@
       },
 
       bindActions: function () {
+
+        $.fn.serializeKeyValues = function () {
+          var object = {},
+              keyValueArray = this.serializeArray(),
+              index;
+
+          for (index = 0; index < keyValueArray.length; index += 1) {
+            var entry = keyValueArray[index];
+            if (typeof object[entry.name] !== "undefined") {
+
+              if (!object[entry.name].push) {
+                object[entry.name] = [object[entry.name]];
+              }
+
+              object[entry.name].push(entry.value || "");
+            }
+            else {
+              object[entry.name] = entry.value || "";
+            }
+          }    
+          return object;
+        };
+
+        var _processAction = function ($sender, routeName) {
+          var $form = $sender.parent("form"),
+              model = null,
+              id = 0;
+
+          if ($form) {
+            model = $form.serializeKeyValues();
+          }
+
+          Controller.executeRoute(routeName, model, id);
+        }
+
         $("[data-action]").each(function () {
           var $this = $(this),
               actionArgs = $this.data("action").split(":"),
               actionEvent = actionArgs[0],
               routeName = actionArgs[1];
 
-          /*
-          Special handling of a custom "enter" action event, which represents
-          hitting the enter key
-          */
           if (actionEvent.trim() === "enter") {
             $this.bind("keypress", function (evt) {
               if (evt.which === 13) {
                 evt.preventDefault();
-                Controller.executeRoute(routeName);
+                _processAction($(this), routeName);
               }
             });
           }
           else {
             $this.bind(actionEvent, function (evt) {
               evt.preventDefault();
-              Controller.executeRoute(routeName);
+              _processAction($(this), routeName);
             });
           }     
         });
@@ -141,4 +167,4 @@
     Controller.executeRoute(routeName);
   };
 
-})(typeof window === "undefined" ? this : window);
+})(typeof window === "undefined" ? this : window, jQuery);

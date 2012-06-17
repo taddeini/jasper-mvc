@@ -38,17 +38,22 @@ JasperMvc.Controller.create("todo", {
     var todos = todoRepository.getAll();
     return JasperMvc.View.render("#todoFooterTemplate", { count: todos.length });
   },
+
   list: function () {
     var todos = todoRepository.getAll();
     return JasperMvc.View.render("#todoListTemplate", todos);
   },
+
   edit: function (id) { },
+
   update: function (model) { },
-  add: function () {
-    var title = $("#newTodoText").val();
-    todoRepository.add(title);
+
+  add: function (model) {
+    console.log(model);
+    todoRepository.add(model.title);
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
+
   remove: function (id) {
     todoRepository.remove(id);
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });

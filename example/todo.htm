@@ -10,7 +10,7 @@
     <div id="tasks">
       <h1>Todos</h1>
       <form>
-        <input type="text" id="newTodoText" placeholder="What needs to be done?" data-action="enter:todo/add">
+        <input name="title" type="text" id="newTodoText" placeholder="What needs to be done?" data-action="enter:todo/add">
       </form>
       <div class="items"> 
         @JasperMvc.Controller.executeAction({ controller: "todo", action: "list" })
