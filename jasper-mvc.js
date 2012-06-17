@@ -1,8 +1,7 @@
-﻿(function () {
-  var root = this;
-  var JasperMvc = root.JasperMvc = {};
+﻿(function (global) {
+  var JasperMvc = global.JasperMvc = {};
 
-  JasperMvc.VERSION = "0.1.0";
+  JasperMvc.VERSION = "0.0.1";
  
   var Settings = JasperMvc.Settings = (function () {
     return {
@@ -15,7 +14,7 @@
 
   var Routes = JasperMvc.Routes = (function () {
     var _routes = {};
-
+  
     var _matchRoute = function (route) {
       var routeEntry = _routes[route.trim()];
       //routeEntry.payload = { id: 1 };
@@ -50,9 +49,6 @@
         return _controllers[name];
       },
 
-      /*
-      - Need to validate command here
-      */
       executeAction: function (actionEntry) {
         var controller = Controller.get(actionEntry.controller);
         return controller[actionEntry.action].apply(this, arguments);
@@ -73,19 +69,15 @@
     return {
       render: function (template, model) {
         /*
-        - Handle use of 2 dependencies here, underscore and jQuery
+        - Handle use of 2 dependencies here, vash and jQuery
         - Handle parsing of 'path' template and also parsing of 'selector'
         */
         if (!_templates[template]) {
-          _templates[template] = _.template($(template).html());
+          _templates[template] = vash.compile($(template).html());
         }
 
         model = model || {};
-        var viewModel = Object.prototype.toString.call(model) === "[object Array]" ?
-							{ jasperList: model } :
-							{ jasperModel: model };
-
-        var content = _templates[template](viewModel);
+        var content = _templates[template](model);
         Settings.$app.html(content);
 
         View.bindActions();
@@ -128,8 +120,8 @@
   - Possible to swap out use of '#' for mapping to routes?
   */
   var Run = JasperMvc.Run = function () {
-    var routeName = root.location.hash.replace("#", "");
+    var routeName = global.location.hash.replace("#", "");
     Controller.executeRoute(routeName);
   };
 
-}).call(this);
+})(typeof window === "undefined" ? this : window);

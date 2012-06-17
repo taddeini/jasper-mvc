@@ -57,9 +57,16 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="examples\css\main.css" />
-    <Content Include="examples\todo.htm" />
+    <Content Include="example\routes.js" />
+    <Content Include="example\css\main.css" />
+    <Content Include="example\images\destroy.png" />
+    <Content Include="example\controller.js" />
+    <Content Include="example\todo.htm" />
     <Content Include="jasper-mvc.js" />
+    <Content Include="libs\vash.js" />
+    <Content Include="libs\vash.min.js">
+      <DependentUpon>vash.js</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="test\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="readme.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
