@@ -86,12 +86,15 @@
         - Handle use of 2 dependencies here, vash and jQuery
         - Handle parsing of 'path' template and also parsing of 'selector'
         */
+
+        var content;
+
         if (!_templates[template]) {
           _templates[template] = vash.compile($(template).html());
         }
 
         model = model || {};
-        var content = _templates[template](model);
+        content = _templates[template](model);
         Settings.$app.html(content);
 
         View.bindActions();

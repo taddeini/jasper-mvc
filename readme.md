@@ -10,9 +10,11 @@ Controllers are entry points for rendering views.  All controllers are comprised
 ### Creating
 
 ```html
-<script>
+<script type="text/javascript">
+
   // Create a Controller named 'todo', with an 'index' action.
   JasperMvc.Controller.create("todo", {
+
     list: function () {
 	  var todos = [
 	    { description: "Finish documentation", id: 1 },
@@ -20,11 +22,12 @@ Controllers are entry points for rendering views.  All controllers are comprised
 	  ];
       return JasperMvc.View.render("#todoListTemplate", todos);
 	}
+
   });
 </script>
 ```
 
-**Actions**, such as the 'list' method above return a rendering of a **View** based on a template selector or path provided as the first argument.
+**Actions**, such as the 'list' method above return a rendering of a **View** based on a template selector as the first argument.  These are **vash** templates which are populated with an optional model argument.
 
 ## Views
 ### Declarative bindings
