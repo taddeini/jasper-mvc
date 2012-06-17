@@ -10,18 +10,20 @@ Controllers are entry points for rendering views.  All controllers are comprised
 ### Creating
 
 ```html
-// Create a Controller named 'todo', with a 'list' action.
-JasperMvc.Controller.create("todo", {
+<script>
+  // Create a Controller named 'todo', with a 'list' action.
+  JasperMvc.Controller.create("todo", {
 
-  list: function () {
-    var todos = [
-	  { description: "Finish documentation", id: 1 },
-	  { description: "Publish sample application", id: 2 }
-	];
-    return JasperMvc.View.render("#todoListTemplate", todos);
-  }
+    list: function () {
+      var todos = [
+        { description: "Finish documentation", id: 1 },
+        { description: "Publish sample application", id: 2 }
+      ];
+      return JasperMvc.View.render("#todoListTemplate", todos);
+    }
 
-});
+  });
+</script>
 ```
 
 **Actions**, such as the 'list' method above return a rendering of a **View** based on a template selector as the first argument.  These are **vash** templates which are populated with an optional model argument.
