@@ -1,7 +1,7 @@
 ﻿<html>
 <head>
   <title>Todos - Jasper MVC</title>
-  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
 </head>
 <body>
   <div id="views"></div>
@@ -25,7 +25,7 @@
         <div class="view" title="Double click to edit...">
           <input type="checkbox">          
           <span>@todo.title</span> 
-          <a class="destroy" data-action="click:todo/delete/@todo.id"></a>       
+          <a class="destroy" data-action="click:todo/remove/@todo.id"></a>       
         </div>
       </div>
     })

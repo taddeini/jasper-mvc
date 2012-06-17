@@ -58,15 +58,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="example\routes.js" />
-    <Content Include="example\css\main.css" />
-    <Content Include="example\images\destroy.png" />
+    <Content Include="css\main.css" />
+    <Content Include="images\destroy.png" />
     <Content Include="example\controller.js" />
     <Content Include="example\todo.htm" />
     <Content Include="jasper-mvc.js" />
+    <Content Include="libs\qunit.js" />
     <Content Include="libs\vash.js" />
-    <Content Include="libs\vash.min.js">
-      <DependentUpon>vash.js</DependentUpon>
-    </Content>
+    <Content Include="tests\jasper-mvc.tests.js" />
+    <Content Include="tests\tests.htm" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -82,9 +82,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="test\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="readme.md" />
   </ItemGroup>

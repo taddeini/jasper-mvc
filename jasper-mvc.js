@@ -15,10 +15,24 @@
   var Routes = JasperMvc.Routes = (function () {
     var _routes = {};
   
-    var _matchRoute = function (route) {
-      var routeEntry = _routes[route.trim()];
-      //routeEntry.payload = { id: 1 };
-      return routeEntry;
+    var _matchRoute = function (routeName) {
+      // Remove any whitespace and trailing "/"s
+      routeName = routeName.trim().replace(/\/$/, "");;
+      var route = _routes[routeName],
+          routeNameParts;
+      
+      if (typeof route === "undefined") {
+        // No matching route was found--use convention.
+        route = {};
+        routeNameParts = routeName.split("/");
+        if (typeof routeNameParts[0] !== "undefined") {
+          route.controller = routeNameParts[0];
+          // Default to an action of "index" if a controller is found, but not an action
+          route.action = (typeof routeNameParts[1] !== "undefined" ? routeNameParts[1] : "index");
+        }
+      }
+
+      return route;
     };
 
     return {
@@ -30,9 +44,9 @@
           }
         }
       },
-      get: function (route) {
-        var routeEntry = _matchRoute(route);
-        return routeEntry;
+      get: function (routeName) {
+        var route = _matchRoute(routeName);
+        return route;
       }
     };
   })();
