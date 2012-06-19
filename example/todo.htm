@@ -24,7 +24,7 @@
       <div class="item @(todo.isComplete ? "done" : "")">
         <div class="view" title="Double click to edit...">
           <form>
-            <input data-action="click:todo/update/@todo.id" 
+            <input data-action="change:todo/update/@todo.id" 
               name="isComplete" @(todo.isComplete ? "checked" : "") 
               type="checkbox">          
             <span>@todo.title</span> 

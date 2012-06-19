@@ -70,23 +70,34 @@ JasperMvc.Controller.create("app", {
 
 JasperMvc.Controller.create("todo", {
   summary: function () {
-    var todos, index, canClear = false, sumTodos;
+    var todos,
+      canClear = false,
+      count = 0,
+      summary;
 
     todos = repository.getAll();
     
-    for(index = 0; index < todos.length; index += 1) {
-      if (todos[index].isComplete) {
+    // See if any are completed, and set the isComplete flag appropriately
+    $.each(todos, function () {
+      if (this.isComplete) {
         canClear = true;
-        break;
+        return false;
       }
-    }
+    });
 
-    var sumTodos = {
-      count: todos.length,
+    // Get the count of no-completed items
+    $.each(todos, function () {
+      if (!this.isComplete) {
+        count += 1;
+      }
+    });
+
+    summary = {
+      count: count,
       canClear: canClear
     };
 
-    return JasperMvc.View.render("#todoFooterTemplate", sumTodos);
+    return JasperMvc.View.render("#todoFooterTemplate", summary);
   },
 
   list: function () {
@@ -111,16 +122,15 @@ JasperMvc.Controller.create("todo", {
   },
 
   removeCompleted: function () {
-    var todos, index, currentTodo;
+    var todos, currentTodo;
 
     todos = repository.getAll();
 
-    for (index = 0; index < todos.length; index += 1) {
-      currentTodo = todos[index];
-      if (currentTodo.isComplete) {
-        repository.remove(currentTodo.id);
+    $.each(todos, function () {
+      if (this.isComplete) {
+        repository.remove(this.id);
       }
-    }
+    });
 
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
