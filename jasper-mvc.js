@@ -63,22 +63,53 @@
         return _controllers[name];
       },
 
-      executeAction: function (actionEntry, model, id) {
-        var controller = Controller.get(actionEntry.controller);
-        return controller[actionEntry.action].apply(this, [model, id]);
-      },
-
-      executeRoute: function (routeName, model, id) {
+      executeRoute: function (routeName, args) {
         var actionEntry = Routes.get(routeName);
         if (typeof actionEntry !== "undefined") {
-          return this.executeAction(actionEntry, model, id);
+          return this.executeAction(actionEntry, args);
         }
+      },
+
+      executeAction: function (actionEntry, args) {
+        var controller = Controller.get(actionEntry.controller);
+        return controller[actionEntry.action].apply(this, [args]);
       }
     };
   })();
 
   var View = JasperMvc.View = (function () {
     var _templates = {}
+
+    //TODO: This really needs to be full blown model binding
+    $.fn.serializeKeyValues = function () {
+      var object = {},
+          keyValueArray = this.serializeArray(),
+          index;
+
+      for (index = 0; index < keyValueArray.length; index += 1) {
+        var entry = keyValueArray[index];
+
+        //TODO: Lame handling of model binding for booleans, from a 'checkbox'--
+        //even though this isn't even specific to a form
+        if (entry.value === "on") {
+          entry.value = true;
+        }
+        else if (entry.value === "off") {
+          entry.value = false;
+        }
+
+        if (typeof object[entry.name] !== "undefined") {
+          if (!object[entry.name].push) {
+            object[entry.name] = [object[entry.name]];
+          }
+          object[entry.name].push(entry.value || "");
+        }
+        else {
+          object[entry.name] = entry.value || "";
+        }
+      }
+      return object;
+    };
 
     return {
       render: function (template, model) {
@@ -98,39 +129,22 @@
       },
 
       bindActions: function () {
-
-        $.fn.serializeKeyValues = function () {
-          var object = {},
-              keyValueArray = this.serializeArray(),
-              index;
-
-          for (index = 0; index < keyValueArray.length; index += 1) {
-            var entry = keyValueArray[index];
-            if (typeof object[entry.name] !== "undefined") {
-
-              if (!object[entry.name].push) {
-                object[entry.name] = [object[entry.name]];
-              }
-
-              object[entry.name].push(entry.value || "");
-            }
-            else {
-              object[entry.name] = entry.value || "";
-            }
-          }    
-          return object;
+        var _getRouteId = function (routeName) {
+          // TODO: HARDCODING THIS FOR NOW TO TEST OUT PARAM PASSING
+          var last = routeName.substring(routeName.length - 1, routeName.length);
+          var lastAsNum = parseFloat(last);
+          return isNaN(lastAsNum) ? 0 : lastAsNum;
         };
 
         var _processAction = function ($sender, routeName) {
           var $form = $sender.parent("form"),
               model = null,
-              id = 0;
+              routeId = _getRouteId(routeName);
 
           if ($form) {
             model = $form.serializeKeyValues();
           }
-
-          Controller.executeRoute(routeName, model, id);
+          Controller.executeRoute(routeName, { model: model, id: routeId });
         }
 
         $("[data-action]").each(function () {

@@ -1,28 +1,63 @@
-﻿var todoRepository = (function () {
-  var _todos = [];
+﻿var repository = (function () {
+  var _getTodos = function () {
+    var todos = localStorage.getItem("todos") || "[]";
+    return JSON
+      .parse(todos)
+      .sort(function (todo1, todo2) {
+        return (todo1.id < todo2.id) ? -1 : 1;
+    });
+  };
+
+  var _setTodos = function (todos) {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
 
   return {
     getAll: function () {
-      return _todos;
+      return _getTodos();
+    },
+    get: function (id) {
+      var todo, index, todos = _getTodos();
+      for (index = 0; index < todos.length; index += 1) {
+        if (id === todos[index].id) {
+          return todos[index];
+        }
+      }
+      return null;
     },
     add: function (title) {
-      var maxId = 0, index, item;
-      for (index = 0; index < _todos.length; index += 1) {
-        item = _todos[index];
+      var maxId = 0, index, item, todos = _getTodos();
+
+      for (index = 0; index < todos.length; index += 1) {
+        item = todos[index];
         if (item.id > maxId) {
           maxId = item.id;
         }
       }
-      _todos.push({ title: title, id: (maxId + 1) });
+
+      todos.push({
+        isComplete: false,
+        title: title,
+        id: (maxId + 1)
+      });
+
+      _setTodos(todos);
+    },
+    update: function (updated) {
+      this.remove(updated.id);
+      todos = _getTodos();
+      todos.push(updated);
+      _setTodos(todos);
     },
     remove: function (id) {
-      var index;
-      for (index = 0; index < _todos.length; index += 1) {
-        if (_todos[index].id === id) {
-          _todos.splice(index, 1);
+      var index, todos = _getTodos();
+      for (index = 0; index < todos.length; index += 1) {
+        if (todos[index].id === id) {
+          todos.splice(index, 1);
           break;
         }
       }
+      _setTodos(todos);
     }
   };
 })();
@@ -35,27 +70,63 @@ JasperMvc.Controller.create("app", {
 
 JasperMvc.Controller.create("todo", {
   summary: function () {
-    var todos = todoRepository.getAll();
-    return JasperMvc.View.render("#todoFooterTemplate", { count: todos.length });
+    var todos, index, canClear = false, sumTodos;
+
+    todos = repository.getAll();
+    
+    for(index = 0; index < todos.length; index += 1) {
+      if (todos[index].isComplete) {
+        canClear = true;
+        break;
+      }
+    }
+
+    var sumTodos = {
+      count: todos.length,
+      canClear: canClear
+    };
+
+    return JasperMvc.View.render("#todoFooterTemplate", sumTodos);
   },
 
   list: function () {
-    var todos = todoRepository.getAll();
+    var todos = repository.getAll();
     return JasperMvc.View.render("#todoListTemplate", todos);
   },
 
-  edit: function (id) { },
+  edit: function (args) { },
 
-  update: function (model) { },
+  update: function (args) {
+    var current = repository.get(args.id),
+      updated = $.extend(current, args.model);
 
-  add: function (model) {
-    console.log(model);
-    todoRepository.add(model.title);
+    repository.update(updated);
+
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
 
-  remove: function (id) {
-    todoRepository.remove(id);
+  add: function (args) {
+    repository.add(args.model.title);
+    return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
+  },
+
+  removeCompleted: function () {
+    var todos, index, currentTodo;
+
+    todos = repository.getAll();
+
+    for (index = 0; index < todos.length; index += 1) {
+      currentTodo = todos[index];
+      if (currentTodo.isComplete) {
+        repository.remove(currentTodo.id);
+      }
+    }
+
+    return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
+  },
+
+  remove: function (args) {
+    repository.remove(args.id);
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   }
 });

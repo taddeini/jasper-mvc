@@ -26,7 +26,19 @@ Controllers are entry points for rendering views.  All controllers are comprised
 </script>
 ```
 
-**Actions**, such as the 'list' method above return a rendering of a **View** based on a template selector as the first argument.  These are **vash** templates which are populated with an optional model argument.
+**Actions**, such as the 'list' method above return a rendering of a **View** based on a template 
+selector as the first argument.
+
+### Actions
+Actions will generally get/manipulate your data, and indicate what should display after that happens.
+There are the entry points for anything that you do.
+
+#### Model Binding
+Similar to ASP.NET MVC, the concept of automated model binding can simplify working with modified data
+and route argument consideraly more easy.  Jasper by convention will pass in as an argument an object
+which contains any form data from the view, and any arguments provided in the configured route.
+
+TODO: PROVIDE EXPANSION AND EXAMPLES
 
 ## Views
 ### Declarative bindings
