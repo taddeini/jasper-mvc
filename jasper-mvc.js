@@ -78,38 +78,7 @@
   })();
 
   var View = JasperMvc.View = (function () {
-    var _templates = {}
-
-    //TODO: This really needs to be full blown model binding
-    $.fn.serializeKeyValues = function () {
-      var object = {},
-          keyValueArray = this.serializeArray(),
-          index;
-
-      for (index = 0; index < keyValueArray.length; index += 1) {
-        var entry = keyValueArray[index];
-
-        //TODO: Lame handling of model binding for booleans, from a 'checkbox'--
-        //even though this isn't even specific to a form
-        if (entry.value === "on") {
-          entry.value = true;
-        }
-        else if (entry.value === "off") {
-          entry.value = false;
-        }
-
-        if (typeof object[entry.name] !== "undefined") {
-          if (!object[entry.name].push) {
-            object[entry.name] = [object[entry.name]];
-          }
-          object[entry.name].push(entry.value || "");
-        }
-        else {
-          object[entry.name] = entry.value || "";
-        }
-      }
-      return object;
-    };
+    var _templates = {};
 
     return {
       render: function (template, model) {
@@ -142,7 +111,7 @@
               routeId = _getRouteId(routeName);
 
           if ($form) {
-            model = $form.serializeKeyValues();
+            model = JSON.parse($form.JSONBind());
           }
           Controller.executeRoute(routeName, { model: model, id: routeId });
         }

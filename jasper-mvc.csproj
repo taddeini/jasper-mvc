@@ -63,24 +63,14 @@
     <Content Include="example\controller.js" />
     <Content Include="example\todo.htm" />
     <Content Include="jasper-mvc.js" />
+    <Content Include="libs\json-binder.js" />
     <Content Include="libs\qunit.js" />
     <Content Include="libs\vash.js" />
     <Content Include="tests\jasper-mvc.tests.js" />
     <Content Include="tests\tests.htm" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

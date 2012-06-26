@@ -10,7 +10,7 @@
     <div id="tasks">
       <h1>Todos</h1>
       <form>
-        <input name="title" type="text" id="newTodoText" placeholder="What needs to be done?" data-action="enter:todo/add">
+        <input name="title" type="text" id="newTodoText" data-action="enter:todo/add" placeholder="What needs to be done?" />
       </form>
       <div class="items"> 
         @JasperMvc.Controller.executeAction({ controller: "todo", action: "list" })
@@ -22,13 +22,18 @@
   <script type="text/template" id="todoListTemplate">
     @model.forEach(function(todo) {
       <div class="item @(todo.isComplete ? "done" : "")">
-        <div class="view" title="Double click to edit...">
+        <div class="view" data-action="dblclick:todo/edit/@todo.id" title="Double click to edit...">
           <form>
-            <input data-action="change:todo/update/@todo.id" 
-              name="isComplete" @(todo.isComplete ? "checked" : "") 
-              type="checkbox">          
-            <span>@todo.title</span> 
-            <a class="destroy" data-action="click:todo/remove/@todo.id"></a>       
+            @if (!todo.isEditing) {     
+              <input data-action="change:todo/update/@todo.id" 
+                name="isComplete" @(todo.isComplete ? "checked" : "") 
+                type="checkbox">
+              <span>@todo.title</span> 
+              <a class="destroy" data-action="click:todo/remove/@todo.id"></a>     
+            }
+            @if (todo.isEditing) {     
+              <input name="title" type="text" data-action="enter:todo/update/@todo.id" value="@todo.title" />
+            }   
           </form>
         </div>
       </div>
@@ -37,8 +42,9 @@
 
   <script type="text/template" id="todoFooterTemplate">
     <footer>
-      <a class="clear" style="display: @(model.canClear ? "block" : "none")" 
-        data-action="click:todo/removeCompleted">Clear completed</a>
+      @if (model.canClear) {
+        <a class="clear" data-action="click:todo/removeCompleted">Clear completed</a>
+      }
       <div class="count">
         <span class="countVal">@model.count</span> left
       </div>
@@ -47,6 +53,7 @@
 </body>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="/libs/json-binder.js"></script>
 <script type="text/javascript" src="/libs/vash.js"></script>
 <script type="text/javascript" src="/jasper-mvc.js"></script>
 <script type="text/javascript" src="controller.js"></script>

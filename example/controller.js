@@ -38,6 +38,7 @@
       todos.push({
         isComplete: false,
         title: title,
+        isEditing: false,
         id: (maxId + 1)
       });
 
@@ -105,11 +106,23 @@ JasperMvc.Controller.create("todo", {
     return JasperMvc.View.render("#todoListTemplate", todos);
   },
 
-  edit: function (args) { },
+  edit: function (args) {
+
+    //TODO: Saving to the "repository" to go into edit mode?? No, no, no, no...
+    var current = repository.get(args.id)
+    current.isEditing = true;
+
+    repository.update(current);
+
+    return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
+  },
 
   update: function (args) {
     var current = repository.get(args.id),
       updated = $.extend(current, args.model);
+
+    //TODO: Magically setting this to false?? No, no, no, no...
+    updated.isEditing = false;
 
     repository.update(updated);
 
