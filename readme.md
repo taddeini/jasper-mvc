@@ -55,20 +55,22 @@ subsequently passes them into the action methods as an argument:
   </form>
 </script>
 
-JasperMvc.Controller.create("todo", {
-  update: function (args) {
-	// By convention, "id" will be passed from the route defined in the "data-action", 
-	// and "model" will be mapped from any <form> elements via the JSON Binder jQuery plugin
+<script>
+  JasperMvc.Controller.create("todo", {
+    update: function (args) {
+      // By convention, "id" will be passed from the route defined in the "data-action", 
+      // and "model" will be mapped from any <form> elements via the JSON Binder jQuery plugin
 
-    var current = repository.get(args.id),
-      updated = $.extend(current, args.model);
+      var current = repository.get(args.id),
+        updated = $.extend(current, args.model);
 
-    updated.isEditing = false;
-    repository.update(updated);
+      updated.isEditing = false;
+      repository.update(updated);
 
-    return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
-  }
-});
+      return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
+    }
+  });
+</script>
 ```
 
 ## Views
