@@ -1,7 +1,7 @@
 ﻿<html>
 <head>
   <title>Todos - Jasper MVC</title>
-  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="../css/main.css" />
 </head>
 <body>
   <div id="views"></div>
@@ -19,24 +19,28 @@
     </div>
   </script>
 
+  <script type="text/template" id="todoItemTemplate">
+    <div class="item @(model.isComplete ? "done" : "")">
+      <div class="view" data-action="dblclick:todo/edit/@model.id" title="Double click to edit...">
+        <form>
+          @if (!model.isEditing) {     
+            <input data-action="change:todo/update/@model.id" 
+              name="isComplete" @(model.isComplete ? "checked" : "") 
+              type="checkbox">
+            <span>@model.title</span> 
+            <a class="destroy" data-action="click:todo/remove/@model.id"></a>     
+          }
+          @if (model.isEditing) {     
+            <input name="title" type="text" data-action="enter:todo/update/@model.id" value="@model.title" />
+          }   
+        </form>
+      </div>
+    </div>
+  </script>
+
   <script type="text/template" id="todoListTemplate">
     @model.forEach(function(todo) {
-      <div class="item @(todo.isComplete ? "done" : "")">
-        <div class="view" data-action="dblclick:todo/edit/@todo.id" title="Double click to edit...">
-          <form>
-            @if (!todo.isEditing) {     
-              <input data-action="change:todo/update/@todo.id" 
-                name="isComplete" @(todo.isComplete ? "checked" : "") 
-                type="checkbox">
-              <span>@todo.title</span> 
-              <a class="destroy" data-action="click:todo/remove/@todo.id"></a>     
-            }
-            @if (todo.isEditing) {     
-              <input name="title" type="text" data-action="enter:todo/update/@todo.id" value="@todo.title" />
-            }   
-          </form>
-        </div>
-      </div>
+      @JasperMvc.Controller.executeAction({ controller: "todo", action: "get" }, { id: todo.id } )
     })
   </script>
 
@@ -53,9 +57,9 @@
 </body>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript" src="/libs/json-binder.js"></script>
-<script type="text/javascript" src="/libs/vash.js"></script>
-<script type="text/javascript" src="/jasper-mvc.js"></script>
+<script type="text/javascript" src="../libs/json-binder.js"></script>
+<script type="text/javascript" src="../libs/vash.js"></script>
+<script type="text/javascript" src="../jasper-mvc.js"></script>
 <script type="text/javascript" src="controller.js"></script>
 <script type="text/javascript" src="routes.js"></script>
 

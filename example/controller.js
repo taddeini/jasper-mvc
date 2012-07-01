@@ -101,6 +101,11 @@ JasperMvc.Controller.create("todo", {
     return JasperMvc.View.render("#todoFooterTemplate", summary);
   },
 
+  get: function(args) {
+    var todo = repository.get(args.id);
+    return JasperMvc.View.render("#todoItemTemplate", todo);
+  },
+
   list: function () {
     var todos = repository.getAll();
     return JasperMvc.View.render("#todoListTemplate", todos);
@@ -109,9 +114,8 @@ JasperMvc.Controller.create("todo", {
   edit: function (args) {
 
     //TODO: Saving to the "repository" to go into edit mode?? No, no, no, no...
-    var current = repository.get(args.id)
+    var current = repository.get(args.id);
     current.isEditing = true;
-
     repository.update(current);
 
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
@@ -121,9 +125,7 @@ JasperMvc.Controller.create("todo", {
     var current = repository.get(args.id),
       updated = $.extend(current, args.model);
 
-    //TODO: Magically setting this to false?? No, no, no, no...
     updated.isEditing = false;
-
     repository.update(updated);
 
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
@@ -135,7 +137,7 @@ JasperMvc.Controller.create("todo", {
   },
 
   removeCompleted: function () {
-    var todos, currentTodo;
+    var todos;
 
     todos = repository.getAll();
 
