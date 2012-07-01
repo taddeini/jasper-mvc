@@ -36,7 +36,7 @@ Actions will generally get/manipulate your data and indicate what should display
 Similar to ASP.NET MVC, the concept of automated model binding can simplify working with modified data
 and route argument considerably.  
 
-Jasper uses the [JSON Binder]() jQuery plugin to automatically map any form elements to a JSON object, and
+Jasper uses the [JSON Binder](https://github.com/taddeini/json-binder) jQuery plugin to automatically map any form elements to a JSON object, and
 subsequently passes them into the action methods as an argument:
 
 ``` html
