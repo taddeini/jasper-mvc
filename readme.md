@@ -30,7 +30,8 @@ These are the entry points for anything that you do.  **Actions**, such as the '
 return a rendering of a **View** based on a template selector as the first argument and the model data
 as the second.
 
-Actions will generally get/manipulate your data and indicate what should display after that happens.
+Actions will generally get/manipulate your data and indicate what should display after that happens, most commonly
+either returning a view or executing another action.
 
 #### Model Binding
 Similar to ASP.NET MVC, the concept of automated model binding can simplify working with modified data

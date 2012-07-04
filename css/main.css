@@ -87,7 +87,7 @@ form {
   cursor: pointer;
   width: 20px;
   height: 20px;
-  background: url(/images/destroy.png) no-repeat center center;
+  background: url('../images/destroy.png') no-repeat center center;
 }
 
 #tasks .item:hover .destroy {

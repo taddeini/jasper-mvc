@@ -16,6 +16,12 @@
     getAll: function () {
       return _getTodos();
     },
+    getAllAsync: function (callback) {
+      var todos = _getTodos();
+      if (typeof callback !== "undefined") {
+        callback(todos);
+      }
+    },
     get: function (id) {
       var todo, index, todos = _getTodos();
       for (index = 0; index < todos.length; index += 1) {
@@ -100,17 +106,18 @@ JasperMvc.Controller.create("todo", {
 
     return JasperMvc.View.render("#todoFooterTemplate", summary);
   },
-
   get: function(args) {
     var todo = repository.get(args.id);
     return JasperMvc.View.render("#todoItemTemplate", todo);
   },
-
   list: function () {
+    //repository.getAllAsync(function (todos) {
+    //  return JasperMvc.View.render("#todoListTemplate", todos);
+    //});
+
     var todos = repository.getAll();
     return JasperMvc.View.render("#todoListTemplate", todos);
   },
-
   edit: function (args) {
 
     //TODO: Saving to the "repository" to go into edit mode?? No, no, no, no...
@@ -120,7 +127,6 @@ JasperMvc.Controller.create("todo", {
 
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
-
   update: function (args) {
     var current = repository.get(args.id),
       updated = $.extend(current, args.model);
@@ -130,12 +136,10 @@ JasperMvc.Controller.create("todo", {
 
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
-
   add: function (args) {
     repository.add(args.model.title);
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
-
   removeCompleted: function () {
     var todos;
 
@@ -149,7 +153,6 @@ JasperMvc.Controller.create("todo", {
 
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });
   },
-
   remove: function (args) {
     repository.remove(args.id);
     return JasperMvc.Controller.executeAction({ controller: "app", action: "index" });

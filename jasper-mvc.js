@@ -58,18 +58,15 @@
       create: function (name, actions) {
         _controllers[name] = actions;
       },
-
       get: function (name) {
         return _controllers[name];
       },
-
       executeRoute: function (routeName, args) {
         var actionEntry = Routes.get(routeName);
         if (typeof actionEntry !== "undefined") {
           return this.executeAction(actionEntry, args);
         }
       },
-
       executeAction: function (actionEntry, args) {
         var controller = Controller.get(actionEntry.controller);
         return controller[actionEntry.action].apply(this, [args]);
@@ -96,7 +93,6 @@
 
         return content;
       },
-
       bindActions: function () {
         var _getRouteId = function (routeName) {
           // TODO: HARDCODING THIS FOR NOW TO TEST OUT PARAM PASSING
