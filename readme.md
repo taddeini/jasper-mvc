@@ -1,14 +1,12 @@
 ﻿# Jasper MVC
-### CURRENTLY UNDER DEVELOPMENT
 
 Jasper MVC is a lightweight JavaScript MVC framework for single page applications. Inspiration for Jasper 
 comes from ASP.NET MVC, and if you are familiar with ASP.NET MVC Jasper will likely feel very natural to you.
 
-## Controllers
+## Controllers and Actions
 
-Controllers are entry points for rendering views.  All controllers are comprised of **action** methods.
-
-### Creating
+**Controllers** are the entry points for your application.  All controllers are made up of **action** methods.  
+The following example shows how to create a basic controller with a "list" action.
 
 ```html
 <script>
@@ -16,8 +14,8 @@ Controllers are entry points for rendering views.  All controllers are comprised
   JasperMvc.Controller.create("todo", {
     list: function () {
       var todos = [
-        { description: "Finish documentation", id: 1 },
-        { description: "Publish sample application", id: 2 }
+        { description: "Feed the dog", id: 1 },
+        { description: "Feed the cat", id: 2 }
       ];
       return JasperMvc.View.render("#todoListTemplate", todos);
     }
@@ -25,13 +23,18 @@ Controllers are entry points for rendering views.  All controllers are comprised
 </script>
 ```
 
-### Actions
-These are the entry points for anything that you do.  **Actions**, such as the 'list' method above 
-return a rendering of a **View** based on a template selector as the first argument and the model data
+Actions are the entry points for anything that you do.  Actions such as the 'list' method above in 
+return a rendering of a **view** based on a template jQuery selector as the first argument, and the model data
 as the second.
 
 Actions will generally get/manipulate your data and indicate what should display after that happens, most commonly
 either returning a view or executing another action.
+
+## Views
+
+Rendering in Jasper MVC is handled by client side templating.
+
+### Declarative bindings
 
 #### Model Binding
 Similar to ASP.NET MVC, the concept of automated model binding can simplify working with modified data
@@ -73,9 +76,6 @@ subsequently passes them into the action methods as an argument:
   });
 </script>
 ```
-
-## Views
-### Declarative bindings
 
 ## Routes
 ### Conventions

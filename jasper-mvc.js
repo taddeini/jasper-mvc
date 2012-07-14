@@ -16,20 +16,22 @@
     var _routes = {};
   
     var _matchRoute = function (routeName) {
-      // Remove any whitespace and trailing "/"
-      routeName = routeName.trim().replace(/\/$/, "");;
-      var route = _routes[routeName],
-          routeNameParts;
+      var route, routeNameParts;
+
+      if (typeof routeName !== "undefined") {
+        // Trim off any whitespace and trailing slashes
+        routeName = routeName.trim().replace(/\/$/, "");
+      }
+      
+      route = _routes[routeName];
       
       if (typeof route === "undefined") {
-        // No matching route was found--use convention.
-        route = {};
-        routeNameParts = routeName.split("/");
-        if (typeof routeNameParts[0] !== "undefined") {
-          route.controller = routeNameParts[0];
-          // Default to an action of "index" if a controller is found, but not an action
-          route.action = (typeof routeNameParts[1] !== "undefined" ? routeNameParts[1] : "index");
-        }
+        // No matching route was found--use convention.  
+        routeNameParts = (typeof routeName === "undefined" || routeName === "") ? [] : routeName.split("/");
+        route = {
+          controller: (typeof routeNameParts[0] !== "undefined" ? routeNameParts[0] : "app"),
+          action: (typeof routeNameParts[1] !== "undefined" ? routeNameParts[1] : "index")
+        };
       }
 
       return route;
@@ -100,7 +102,6 @@
           var lastAsNum = parseFloat(last);
           return isNaN(lastAsNum) ? 0 : lastAsNum;
         };
-
         var _processAction = function ($sender, routeName) {
           var $form = $sender.parent("form"),
               model = null,
@@ -111,7 +112,6 @@
           }
           Controller.executeRoute(routeName, { model: model, id: routeId });
         }
-
         $("[data-action]").each(function () {
           var $this = $(this),
               actionArgs = $this.data("action").split(":"),
@@ -137,10 +137,6 @@
     }
   })();
 
-  /*
-  - Mapping of routes needs to be done like ASP.NET MVC, i.e. matching based on first come first serve.
-  - Possible to swap out use of '#' for mapping to routes?
-  */
   var Run = JasperMvc.Run = function () {
     var routeName = global.location.hash.replace("#", "");
     Controller.executeRoute(routeName);

@@ -1,4 +1,16 @@
-﻿module("JasperMvc.Routes", {
+﻿module("JasperMvc.Controller", {
+  setup: function () { }
+});
+
+module("JasperMvc.View", {
+  setup: function () { }
+});
+
+module("JasperMvc.Settings", {
+  setup: function () { }
+});
+
+module("JasperMvc.Routes", {
   setup: function () {
     JasperMvc.Routes.create({
       "foo/bar": { controller: "fizz", action: "bin" },
@@ -45,5 +57,19 @@ test("A route name with no entry should use a default action if no action is spe
       route = JasperMvc.Routes.get(routeName);
 
   strictEqual(route.controller, "bin");
+  strictEqual(route.action, "index");
+});
+
+test("A route name with no entry should use a default controller and action.", function () {
+  var route = JasperMvc.Routes.get();
+
+  strictEqual(route.controller, "app");
+  strictEqual(route.action, "index");
+})
+
+test("A route name with an empty value should use a default controller and action.", function () {
+  var route = JasperMvc.Routes.get("");
+
+  strictEqual(route.controller, "app");
   strictEqual(route.action, "index");
 })

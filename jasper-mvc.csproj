@@ -57,13 +57,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="example\routes.js" />
     <Content Include="css\main.css" />
     <Content Include="images\destroy.png" />
     <Content Include="example\controller.js" />
     <Content Include="example\todo.htm" />
     <Content Include="jasper-mvc.js" />
+    <Content Include="libs\handlebars-1.0.0.beta.6.js" />
     <Content Include="libs\json-binder.js" />
+    <Content Include="libs\mustache.js" />
     <Content Include="libs\qunit.js" />
     <Content Include="libs\vash.js" />
     <Content Include="tests\jasper-mvc.tests.js" />
