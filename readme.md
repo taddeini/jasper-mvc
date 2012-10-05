@@ -76,9 +76,3 @@ subsequently passes them into the action methods as an argument:
   });
 </script>
 ```
-
-## Routes
-### Conventions
-
-## Settings
-### $app
